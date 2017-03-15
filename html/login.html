@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet"    href="login.css"></link>
+  <link rel="stylesheet"    href="sweetalert.css"></link>
+  <script src="sweetalert.min.js"></script>
+   <script src="angular.min.js"></script>
+   <script src="public/angular-sweetalert/SweetAlert.min.js"></script>
+   <script src="app.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+</head>
+
+<body		background="../my.png">	
+
+<form action="/action_page.php">
+  <div class="imgcontainer">
+    <img src="../pg.png" alt="Avatar" class="avatar">
+  </div>
+
+  <div class="container">
+    <label><b>Username</b></label>
+    <input type="text" placeholder="Username" name="uname" required>
+
+    <label><b>Password</b></label>
+    <input type="password" placeholder="Password" name="psw" required>
+
+    <button onclick="validation();"> type="submit">Login</button>
+     <script type="text/javascript">
+								function validation()
+								{
+									swal("Good Job! You successfully logged in");
+									var username = 'kiran' ;
+									var password = '123' ;
+									
+									var userName = document.getElementById('username').value;
+									var passWord = document.getElementById('password').value;
+									
+									if ((username == userName) && (password == passWord)) {
+										window.location.href = "/exportcsv";
+									}
+											else
+											{
+											swal("OOPPSS! Wrong Username or Password");
+											}									
+								}
+	</script>
+  </div>
+  </form>
+</body>
+</html>

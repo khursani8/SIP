@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./css/attributes.css"></link>
+    <script src="./js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+</head>
+
+<body background="../my.png">
+
+    <form method="post" action="" id='formkot'>
+        <div class="imgcontainer">
+            <img src="../pg.png" alt="Avatar" class="img-circle" align="center">
+        </div>
+
+
+        <div class="container">
+            <label><b>User Email</b></label>
+            <input type="text" placeholder="User Email" id="Email">
+            <!--<input type="file" name="fileupload" value="fileupload" id="fileupload" class="inputfile">-->
+            <br>
+            <br>
+
+            <label><b>User Name</b></label>
+            <input type="text" placeholder="User Name" id="Usernames">
+            <!--<input type="file" name="fileupload" value="fileupload" id="fileupload" class="inputfile">-->
+            <br>
+            <br>
+
+            <label><b>Agency</b></label>
+            <input type="text" placeholder="Agency" id="Agency">
+            <!--<input type="file" name="fileupload" value="fileupload" id="fileupload" class="inputfile">-->
+            <br>
+            <br>
+
+            <label><b>Country</b></label>
+            <input type="text" placeholder="Country" id="Country">
+            <!--<input type="file" name="fileupload" value="fileupload" id="fileupload" class="inputfile">-->
+            <br>
+            <br>
+
+            <!--<label><b>Status</b></label>
+            <input type="checkbox" name="Status" value="active"> Active
+            <input type="checkbox" name="Status" value="notactive"> Not Active<br>-->
+
+            <div id="status">
+                <input type="radio" id="r1" name="status" value="active"> Active
+                <input type="radio" id="r2" name="status" value="notactive"> Not Active
+            </div>
+
+            <br>
+            <br>
+            <button type="button" onClick="addtocsv()">Search</button>
+
+
+    </form>
+    </div>
+</body>
+
+<script type="text/javascript">
+    function addtocsv() {
+        var csvData = new Array(); // To collect the names
+        var csvFilePath = "C:\testPS\output.csv";
+
+        // Collect General Information
+        csvData[0] = document.getElementById('Email').value;
+        csvData[1] = document.getElementById('Usernames').value;
+        csvData[2] = document.getElementById('Agency').value;
+        csvData[3] = document.getElementById('Country').value;
+        // csvData[4] = document.getElementById('Status').value;
+        csvData[4] = $("input[type='radio']:checked").val();
+        console.log(csvData)
+        var dataToSend = objectifyForm(csvData);
+
+        $.post("/exportcsv", dataToSend);
+
+
+        // var fso = new ActiveXObject('Scripting.FileSystemObject');
+        // var oStream = fso.OpenTextFile(csvFilePath, 8, true, 0);
+        // oStream.WriteLine(csvData.join(','));
+        // oStream.Close();
+        clearData();
+    }
+
+    function clearData() {
+        document.getElementById('Email').value = "";
+        document.getElementById('Usernames').value = "";
+        document.getElementById('Agency').value = "";
+        document.getElementById('Country').value = "";
+        // document.getElementById('Status').value = "";
+    }
+
+    function objectifyForm(formArray) { //serialize data function
+
+        returnArray = {};
+        formName = ['email', 'username', 'agency', 'country', 'status'];
+        for (var i = 0; i < formArray.length; i++) {
+            returnArray[formName[i]] = formArray[i];
+            // console.log(formArray[i])
+        }
+        return returnArray;
+    }
+</script>

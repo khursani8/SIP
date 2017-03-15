@@ -1,0 +1,51 @@
+import-module ActiveDirectory
+
+function Get-attribute
+{
+
+    [CmdletBinding()]
+    param
+    ()
+
+    DynamicParam {
+        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute
+        $ParamAttrib.Mandatory = $true
+        $ParamAttrib.ParameterSetName ='_AllParameterSets'
+
+        $AttribColl = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+        $AttribColl.Add($ParamAttrib)
+        $Values = "AccountExpirationDate","AccountLockoutTime","AccountNotDelegated","AllowReversiblePasswordEncryption","BadLogonCount","CannotChangePassword","CanonicalName","Certificates","ChangePasswordAtLogon","City","CN","Company","Country","Created","Deleted","Department","Description","DisplayName","DistinguishedName","Division","DoesNotRequirePreAuth","EmailAddress","EmployeeID","EmployeeNumber","Enabled","Fax","GivenName","HomeDirectory","HomedirRequired","HomeDrive","HomePage","HomePhone","Initials","LastBadPasswordAttempt","LastKnownParent","LastLogonDate","LockedOut","LogonWorkstations","Manager","MemberOf","MNSLogonAccount","MobilePhone","Modified","Name","ObjectCategory","ObjectClass","ObjectGUID","Office","OfficePhone","Organization","OtherName","PasswordExpired","PasswordLastSet","PasswordNeverExpires","PasswordNotRequired","POBox","PostalCode","PrimaryGroup","ProfilePath","ProtectedFromAccidentalDeletion","SamAccountName","ScriptPath","ServicePrincipalNames","SID","SIDHistory","SmartcardLogonRequired","State","StreetAddress","Surname","Title","TrustedForDelegation","TrustedToAuthForDelegation","UseDESKeyOnly","UserPrincipalName"
+
+        $AttribColl.Add((New-Object System.Management.Automation.ValidateSetAttribute($Values)))
+        
+        $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('attributes',[string],$AttribColl)
+        $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+        $RuntimeParamDic.Add('attributes',$RuntimeParam)
+        return $RuntimeParamDic
+        
+
+    }
+
+    process{
+
+        $FilePath="C:\Users\kiranjeet.kaur\Downloads\myapp\new_csv.csv"
+        $argv = $PSBoundParameters.attributes
+        
+            Import-CSV $FilePath  | ForEach-Object { 
+            Get-ADUser -Server "ap.corp.ipgnetwork.com" -Filter "userPrincipalName -like '*$($_.names)*'"  -Properties *|  Select-Object @{Label ="Email";Expression ={$_.userPrincipalName}},@{Label="Agency";Expression ={$_.extensionAttribute8}},$argv
+            
+             }|Export-csv c:\testPS\dynamic3.csv -NoTypeInformation
+
+            $csv = 'C:\testPS\dynamic3.csv'
+		    (Get-Content $csv) -replace '^"(.*?)","(.*?)","(.*?)"$', '$1,$2,$3' |
+    	    Set-Content $csv
+    
+	write-output "AP Completed"
+             
+    
+        }
+            
+    }
+
+    
+Get-attribute
